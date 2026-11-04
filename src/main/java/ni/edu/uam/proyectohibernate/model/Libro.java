@@ -1,4 +1,4 @@
-package org.example.proyectohibernate.model;
+package ni.edu.uam.proyectohibernate.model;
 
 import jakarta.persistence.*;
 
@@ -20,9 +20,58 @@ public class Libro {
     private String autor;
 
     @Column(name = "anio_publicacion", nullable = false)
-    private String anio_publicacion;
+    private int anioPublicacion;
 
     @Column(name = "precio", nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
 
+    public Libro() {
+    }
+
+    public Libro(String titulo, String autor, int anioPublicacion, BigDecimal precio) {
+        this.titulo = titulo;
+        this.autor = autor;
+        this.anioPublicacion = anioPublicacion;
+        this.precio = precio;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getAutor() {
+        return autor;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
+    public int getAnioPublicacion() {
+        return anioPublicacion;
+    }
+
+    public void setAnioPublicacion(int anioPublicacion) {
+        this.anioPublicacion = anioPublicacion;
+    }
+
+    public BigDecimal getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(BigDecimal precio) {
+        this.precio = precio;
+    }
 }
