@@ -11,7 +11,7 @@ public class Libro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private long id;
 
     @Column(name = "titulo", nullable = false, length = 150)
     private String titulo;
@@ -22,7 +22,7 @@ public class Libro {
     @Column(name = "anio_publicacion", nullable = false)
     private int anioPublicacion;
 
-    @Column(name = "precio", nullable = false, precision = 10, scale = 2)
+    @Column(name = "precio", nullable = false, precision = 12, scale = 2)
     private BigDecimal precio;
 
     public Libro() {
@@ -35,11 +35,11 @@ public class Libro {
         this.precio = precio;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
