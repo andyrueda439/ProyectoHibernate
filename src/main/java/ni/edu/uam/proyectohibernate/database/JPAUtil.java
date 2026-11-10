@@ -1,4 +1,4 @@
-package org.example.proyectohibernate.database;
+package ni.edu.uam.proyectohibernate.database;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -12,26 +12,25 @@ public class JPAUtil {
     private static EntityManagerFactory entityManagerFactory;
 
     public static synchronized void iniciar() {
-        String password = null;
         if (entityManagerFactory == null) {
-            password = System.getenv("DB_password");
+            String password = System.getenv("DB_PASSWORD");
             if (password == null || password.isBlank()) {
-                throw new RuntimeException("DB_PASSWORD enviorment variable is emtpy");
+                throw new RuntimeException("La variable de entorno DB_PASSWORD está vacía");
             }
+
+            Map<String, Object> propiedades = new HashMap<>();
+            propiedades.put("jakarta.persistence.jdbc.password", password);
+            entityManagerFactory = Persistence.createEntityManagerFactory("bibliotecaPU", propiedades);
         }
-
-        Map<String, Object> propiedades = new HashMap<>();
-        propiedades.put("jakarta.persistance.jdbc.password", password);
-        entityManagerFactory = Persistence.createEntityManagerFactory("bdbiblioteca", propiedades);
-
     }
-    public static EntityManager getEntityManager(){
+
+    public static EntityManager getEntityManager() {
         iniciar();
         return entityManagerFactory.createEntityManager();
     }
 
-    public static synchronized void cerrar(){
-        if(entityManagerFactory != null && entityManagerFactory.isOpen()){
+    public static synchronized void cerrar() {
+        if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
             entityManagerFactory.close();
             entityManagerFactory = null;
         }
