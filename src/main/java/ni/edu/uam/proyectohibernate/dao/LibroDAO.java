@@ -11,33 +11,29 @@ import java.util.List;
 public class LibroDAO {
 
     private Categoria obtenerCategoria(EntityManager em, Libro libro) {
-
-        //Validamos que el libro no sea null
         if (libro.getCategoria() == null || libro.getCategoria().getId() == null) {
-            throw new RuntimeException("Error al obtener categoria");
+            throw new RuntimeException("Error al obtener la categoría");
         }
-        Long categoriaID = libro.getCategoria().getId();
-        Categoria categoria = em.find(Categoria.class, categoriaID);
+
+        Long categoriaId = libro.getCategoria().getId();
+        Categoria categoria = em.find(Categoria.class, categoriaId);
+
         if (categoria == null) {
-            throw new RuntimeException("No se encontro la categoria cpm ID: " + categoriaID);
+            throw new RuntimeException("No se encontró la categoría con ID: " + categoriaId);
         }
         return categoria;
-
     }
-
 
     public void guardar(Libro libro) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
 
         try {
-            //Iniciar la transaccion de PostgreSQL
             tx.begin();
 
             Categoria categoria = obtenerCategoria(em, libro);
             libro.setCategoria(categoria);
 
-            //Decirle a Hibernate que prepare la persistencia
             em.persist(libro);
             tx.commit();
         } catch (RuntimeException ex) {
@@ -53,9 +49,11 @@ public class LibroDAO {
     public List<Libro> listar() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            return em.createQuery("SELECT l FROM Libro l JOIN FETCH l.categoria ORDER BY l.id", Libro.class).getResultList();
-        }
-        finally {
+            return em.createQuery(
+                    "SELECT l FROM Libro l LEFT JOIN FETCH l.categoria ORDER BY l.id",
+                    Libro.class
+            ).getResultList();
+        } finally {
             em.close();
         }
     }
@@ -71,6 +69,7 @@ public class LibroDAO {
                 tx.rollback();
                 return false;
             }
+            libroBD.setCategoria(obtenerCategoria(em, libro));
             libroBD.setTitulo(libro.getTitulo());
             libroBD.setAutor(libro.getAutor());
             libroBD.setAnioPublicacion(libro.getAnioPublicacion());

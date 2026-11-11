@@ -10,9 +10,10 @@ public class CategoriaDAO {
 
     public List<Categoria> listar() {
         EntityManager em = JPAUtil.getEntityManager();
-        try{
-            return em.createQuery("select c from Categoria c").getResultList();
+        try {
+            return em.createQuery("SELECT c FROM Categoria c", Categoria.class).getResultList();
+        } finally {
+            em.close();
         }
     }
-
 }

@@ -19,7 +19,7 @@ public class Categoria {
     @Column(name = "descripcion", nullable = true, length = 250)
     private String descripcion;
 
-    @OneToMany(mappedBy = "categorias", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
     private List<Libro> libros = new ArrayList<Libro>();
 
     public Categoria() {
@@ -52,5 +52,18 @@ public class Categoria {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public List<Libro> getLibros() {
+        return libros;
+    }
+
+    public void setLibros(List<Libro> libros) {
+        this.libros = libros;
+    }
+
+    @Override
+    public String toString() {
+        return nombre;
     }
 }
