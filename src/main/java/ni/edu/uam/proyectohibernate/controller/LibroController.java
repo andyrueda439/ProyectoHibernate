@@ -1,15 +1,13 @@
 package ni.edu.uam.proyectohibernate.controller;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import ni.edu.uam.proyectohibernate.dao.CategoriaDAO;
 import ni.edu.uam.proyectohibernate.dao.LibroDAO;
+import ni.edu.uam.proyectohibernate.model.Categoria;
 import ni.edu.uam.proyectohibernate.model.Libro;
 
 import java.math.BigDecimal;
@@ -22,6 +20,8 @@ public class LibroController {
     @FXML private TextField txtAutor;
     @FXML private TextField txtAnio;
     @FXML private TextField txtPrecio;
+
+    //Temporal @FXML private ComboBox;
 
     @FXML private Button btnGuardar;
     @FXML private Button btnCargar;
@@ -36,7 +36,11 @@ public class LibroController {
     @FXML private TableColumn<Libro, Integer> colAnio;
     @FXML private TableColumn<Libro, BigDecimal> colPrecio;
 
+    //Nueva columna para mostrar el nombre de categoria.
+    @FXML private TableColumn<Libro, String> colCategoria;
+
     private final LibroDAO libroDAO = new LibroDAO();
+    private final CategoriaDAO categoriaDAO = new CategoriaDAO();
 
     private Long idSeleccionado = null;
 
@@ -47,6 +51,13 @@ public class LibroController {
         colAutor.setCellValueFactory(new PropertyValueFactory<>("autor"));
         colAnio.setCellValueFactory(new PropertyValueFactory<>("anioPublicacion"));
         colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
+
+        //Mostrar el nombre, no el objeto Categoria.
+        colCategoria.setCellValueFactory(data -> {
+            Categoria categoria = data.getValue().getCategoria();
+            String nombre = categoria != null ? categoria.getNombre() : "Sin categoria";
+            return new SimpleStringProperty(nombre);
+        });
 
         tblLibros.getSelectionModel().selectedItemProperty().addListener((obs, anterior, nuevo) -> {
             if (nuevo != null) {
@@ -88,6 +99,14 @@ public class LibroController {
         int anio = Integer.parseInt(txtAnio.getText().trim());
         BigDecimal precio = new BigDecimal(txtPrecio.getText().trim());
         return new Libro(titulo, autor, anio, precio);
+    }
+
+    @FXML
+    private void cargarCategorias() {
+        try{
+            List<Categoria> categorias = categoriaDAO.listar();
+            cmbCategorias.setItems(FXCollections.observableArrayList(categorias));
+        } catch {Exception}
     }
 
     @FXML
